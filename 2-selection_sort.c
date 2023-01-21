@@ -1,45 +1,66 @@
 #include "sort.h"
-
 /**
- * swap_ints - Swap two integers in an array.
- * @a: The first integer to swap.
- * @b: The second integer to swap.
+ *  quick_sort -  sorts an array in ascending order using the Quick sort.
+ *  @array: Array.
+ *  @size: Size.
  */
-void swap_ints(int *a, int *b)
+void quick_sort(int *array, size_t size)
 {
-	int tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
+	if (!array || size < 2)
+		return;
+	
+	sorter(array, 0, size - 1, size);
 }
 
 /**
- * selection_sort - Sort an array of integers in ascending order
- *                  using the selection sort algorithm.
- * @array: An array of integers.
- * @size: The size of the array.
- *
- * Description: Prints the array after each swap.
+ *  sorter - Sorter.
+ *  @array: Array.
+ *  @low: Low.
+ *  @high: High.
+ *  @size: Size.
  */
-void selection_sort(int *array, size_t size)
+void sorter(int *array, int low, int high, int size)
 {
-	int *min;
-	size_t i, j;
+	int div;
 
-	if (array == NULL || size < 2)
-		return;
-
-	for (i = 0; i < size - 1; i++)
+	if (low < high)
 	{
-		min = array + i;
-		for (j = i + 1; j < size; j++)
-			min = (array[j] < *min) ? (array + j) : min;
+		div = div_array(array, low, high, size);
+		sorter(array, low, div - 1, size);
+		sorter(array, div + 1, high, size);
+	}
+}
 
-		if ((array + i) != min)
+/**
+ *  div_array - Divide the array.
+ *  @array: Array.
+ *  @low: Low.
+ *  @high: High.
+ *  @size: Size.
+ */
+int div_array(int *array, int low, int high, int size)
+{
+	int mv, tmp;
+
+	for (mv = low; mv < high; mv++)
+	{
+		if (array[mv] < array[high])
 		{
-			swap_ints(array + i, min);
-			print_array(array, size);
+			tmp = array[low];
+			array[low] = array[mv];
+			array[mv] = tmp;
+			if (low != mv)
+				print_array(array, size);
+			low++;
 		}
 	}
+	tmp = array[high];
+	array[high] = array[low];
+	array[low] = tmp;
+	if (low != high)
+	{
+		print_array(array, size);
+	}
+
+	return (low);
 }
